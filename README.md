@@ -2,9 +2,6 @@
 
 
 
-Sure, I will revise the section you provided to make it more organized and refined for a university database design project documentation.
-
----
 
 ### Design Project Documentation
 
@@ -42,12 +39,9 @@ The EER diagram for the UAMS outlines the following key entities and their relat
 
 
 
-
-To elaborate on the Entity-Relationship Diagram (EER) for a university system, I will enhance and expand the previous example, adding more entities, attributes, relationships, and specifying cardinalities. This detailed EER will help in understanding the complex interrelationships in a university database system.
-
 ### Expanded EER Diagram (Textual Representation)
 
-```
+```md
 +------------------+      +-------------+        +-------------+
 |     Student      |      |   Advisor   |        | Instructor  |
 +------------------+      +-------------+        +-------------+
@@ -106,6 +100,8 @@ To elaborate on the Entity-Relationship Diagram (EER) for a university system, I
                                                                                | - prereq_id (FK)
                                                                                +-------------+
 ```
+                                                                    
+ 
 
 ### Enhanced Details and Cardinalities:
 
@@ -162,6 +158,11 @@ To elaborate on the Entity-Relationship Diagram (EER) for a university system, I
    - **Relationships**:
      - Indicates that a course (prereq_id) must be taken before another course (course_id). This is a recursive relationship on the Course entity, reflecting course prerequisites.
 
+10. **Grading Component**:
+    - **Attributes**: `max_points`, `weights`.
+    - **Relationships**:
+      - Each course can have multiple grading components (e.g., quizzes, exams, assignments) with different weights contributing to the final grade.
+
 ### Cardinalities:
 - **Student to Advisor**: One-to-One (Each student has exactly one advisor).
 - **Advisor to Instructor**: Many-to-One (Each advisor is an instructor, but an instructor can advise multiple students).
@@ -175,4 +176,5 @@ To elaborate on the Entity-Relationship Diagram (EER) for a university system, I
 - **Section to Classroom**: Many-to-One (A classroom can host many sections, but each section is held in one classroom).
 - **Section to Time Slot**: Many-to-One (A time slot can accommodate many sections, but each section occurs during one specific time slot).
 - **Prereq to Course**: Many-to-One (A course can have many prerequisites, but each prerequisite relation points to one specific course).
+- **Grading Components**: Many-to-One (A course can have multiple grading components, but each component is associated with one course).
 
