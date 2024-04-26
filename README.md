@@ -1,25 +1,15 @@
-# University-Academic-Management-System
+# University-Academic-Management-System (UAMS)
 
 
 
 
-### Design Project Documentation
+## 🔆 Introduction
 
-#### Title
-**University Academic Management System (UAMS)**
+The university currently utilizes several disjointed systems for its academic management needs. This fragmentation leads to inefficiencies in academic record maintenance, scheduling, and resource management, making the processes cumbersome and error-prone. The proposed University Academic Management System (UAMS) aims to centralize and streamline the management of academic records, course scheduling, faculty assignments, and classroom allocations. By doing so, UAMS will ensure higher data integrity, improve accessibility, and enhance the decision-making capabilities of academic administrators.
 
-#### Team Information
-
-
-#### Client Description and Problem-Solution Statement
-
-**Problem Statement:** 
-The university currently utilizes several disjointed systems for its academic management needs. This fragmentation leads to inefficiencies in academic record maintenance, scheduling, and resource management, making the processes cumbersome and error-prone.
-
-**Solution Statement:** 
-The proposed University Academic Management System (UAMS) aims to centralize and streamline the management of academic records, course scheduling, faculty assignments, and classroom allocations. By doing so, UAMS will ensure higher data integrity, improve accessibility, and enhance the decision-making capabilities of academic administrators.
-
-#### Simplified Entity-Relationship Diagram (EER) Overview
+---
+## 🥳 Features
+### Simplified Entity-Relationship Diagram (EER) Overview
 
 The EER diagram for the UAMS outlines the following key entities and their relationships:
 
@@ -103,7 +93,7 @@ The EER diagram for the UAMS outlines the following key entities and their relat
                                                                     
  
 
-### Enhanced Details and Cardinalities:
+### Enhanced Details and Cardinalities
 
 1. **Student**:
    - **Attributes**: `ID`, `name`, `dept_name`, `tot_cred`, `date_of_birth`, `address`.
@@ -163,7 +153,7 @@ The EER diagram for the UAMS outlines the following key entities and their relat
     - **Relationships**:
       - Each course can have multiple grading components (e.g., quizzes, exams, assignments) with different weights contributing to the final grade.
 
-### Cardinalities:
+### Cardinalities
 - **Student to Advisor**: One-to-One (Each student has exactly one advisor).
 - **Advisor to Instructor**: Many-to-One (Each advisor is an instructor, but an instructor can advise multiple students).
 - **Instructor to Department**: Many-to-One (Each instructor belongs to one department, but a department has many instructors).
@@ -177,4 +167,16 @@ The EER diagram for the UAMS outlines the following key entities and their relat
 - **Section to Time Slot**: Many-to-One (A time slot can accommodate many sections, but each section occurs during one specific time slot).
 - **Prereq to Course**: Many-to-One (A course can have many prerequisites, but each prerequisite relation points to one specific course).
 - **Grading Components**: Many-to-One (A course can have multiple grading components, but each component is associated with one course).
+
+## 📝 Changelog
+- [2024.04.21]: Project started.
+
+---
+
+## 📢 Disclaimer
+We have developed this repository to be used for project purposes and therefore it should only be used for personal/research/non-commercial purposes.
+
+---
+
+Copyright © University of California, Berkeley, Faculty of Engineering, Department of Industrial Engineering and Operation Research, Hin Chi Kwok [https://github.com/HaleyKwok], Gilberto Yarritu [https://github.com/GilbertoYTec], Zixuan Huangfu, Yi Fang and Yu-Heng Chi. All rights reserved.
 
