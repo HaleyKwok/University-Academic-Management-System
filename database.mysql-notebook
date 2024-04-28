@@ -1,0 +1,2004 @@
+{
+    "type": "MySQLNotebook",
+    "version": "1.0",
+    "caption": "DB Notebook",
+    "content": "CREATE DATABASE myuniversity;\nUSE myuniversity;\nCREATE TABLE Department (\n    dept_name VARCHAR(50) PRIMARY KEY,\n    building VARCHAR(50),\n    budget DECIMAL(12, 2)\n);\n\nCREATE TABLE Course (\n    course_ID VARCHAR(10) PRIMARY KEY,\n    title VARCHAR(100),\n    dept_name VARCHAR(50),\n    credits INT,\n    syllabus TEXT,\n    FOREIGN KEY (dept_name) REFERENCES Department(dept_name)\n);\n\nCREATE TABLE Instructor (\n    ID VARCHAR(10) PRIMARY KEY,\n    name VARCHAR(100),\n    dept_name VARCHAR(50),\n    salary DECIMAL(12, 2),\n    FOREIGN KEY (dept_name) REFERENCES Department(dept_name)\n);\n\nCREATE TABLE Section (\n    sec_ID VARCHAR(10),\n    course_ID VARCHAR(10),\n    semester VARCHAR(10),\n    year INT,\n    building VARCHAR(50),\n    room_no VARCHAR(10),\n    time_slot_ID VARCHAR(10),\n    PRIMARY KEY (sec_ID, course_ID, semester, year),\n    FOREIGN KEY (course_ID) REFERENCES Course(course_ID)\n);\n\nCREATE TABLE Time_Slot (\n    time_slot_ID VARCHAR(10) PRIMARY KEY,\n    day VARCHAR(10),\n    start_hr TIME,\n    end_hr TIME,\n    start_min TIME,\n    end_min TIME\n);\n\nCREATE TABLE Classroom (\n    room_no VARCHAR(10),\n    building VARCHAR(50),\n    capacity INT,\n    PRIMARY KEY (room_no, building)\n);\n\nCREATE TABLE Student (\n    ID VARCHAR(10) PRIMARY KEY,\n    name VARCHAR(100),\n    dept_name VARCHAR(50),\n    tot_credit INT,\n    date_of_birth DATE,\n    FOREIGN KEY (dept_name) REFERENCES Department(dept_name)\n);\n\nCREATE TABLE Advisor (\n    s_ID VARCHAR(10),\n    I_ID VARCHAR(10),\n    PRIMARY KEY (s_ID),\n    FOREIGN KEY (s_ID) REFERENCES Student(ID),\n    FOREIGN KEY (I_ID) REFERENCES Instructor(ID)\n);\n\nCREATE TABLE Takes (\n    ID VARCHAR(10),\n    course_ID VARCHAR(10),\n    sec_ID VARCHAR(10),\n    semester VARCHAR(10),\n    year INT,\n    grade CHAR(2),\n    PRIMARY KEY (ID, course_ID, sec_ID, semester, year),\n    FOREIGN KEY (ID) REFERENCES Student(ID),\n    FOREIGN KEY (course_ID, sec_ID, semester, year) REFERENCES Section(course_ID, sec_ID, semester, year)\n);\n\nCREATE TABLE Teaches (\n    ID VARCHAR(10),\n    course_ID VARCHAR(10),\n    sec_ID VARCHAR(10),\n    semester VARCHAR(10),\n    year INT,\n    PRIMARY KEY (ID, course_ID, sec_ID, semester, year),\n    FOREIGN KEY (ID) REFERENCES Instructor(ID),\n    FOREIGN KEY (course_ID, sec_ID, semester, year) REFERENCES Section(course_ID, sec_ID, semester, year)\n);\n\nCREATE TABLE Prerequisite (\n    course_ID VARCHAR(10),\n    prereq_ID VARCHAR(10),\n    PRIMARY KEY (course_ID, prereq_ID),\n    FOREIGN KEY (course_ID) REFERENCES Course(course_ID),\n    FOREIGN KEY (prereq_ID) REFERENCES Course(course_ID)\n);\n\nCREATE TABLE Grading_Components (\n    course_ID VARCHAR(10),\n    max_points INT,\n    weights DECIMAL(5, 2),\n    PRIMARY KEY (course_ID),\n    FOREIGN KEY (course_ID) REFERENCES Course(course_ID)\n);\n\n\n// -- The relationship between Section and Time_Slot is many-to-one, so we add a foreign key to Section.\n// ALTER TABLE Section\n// ADD FOREIGN KEY (time_slot_id) REFERENCES Time_Slot(time_slot_id);\n\n// -- The relationship between Section and Classroom is many-to-one, so we add a foreign key to Section.\n// ALTER TABLE Section\n// ADD FOREIGN KEY (building, room_no) REFERENCES Classroom(building, room_no);\n\nSHOW TABLES;\nDESCRIBE Advisor;\nDESCRIBE Classroom;\nDESCRIBE Course;\nDESCRIBE Department;\nDESCRIBE Grading_Components;\nDESCRIBE Instructor;\nDESCRIBE Prerequisite;\nDESCRIBE Section;\nDESCRIBE Student;\nDESCRIBE Takes;\nDESCRIBE Teaches;\nDESCRIBE Time_Slot;\n-- Department\nINSERT INTO Department (dept_name, building, budget) VALUES\n('Computer Science', 'CompSci Building', 500000),\n('Mathematics', 'Math Building', 300000),\n('Physics', 'Physics Building', 250000),\n('History', 'History Building', 200000),\n('English', 'English Building', 150000),\n('Biology', 'Biology Building', 350000),\n('Chemistry', 'Chemistry Building', 360000),\n('Economics', 'Economics Building', 400000),\n('Law', 'Law Building', 600000),\n('Psychology', 'Psychology Building', 220000);\n-- Course\nINSERT INTO Course (course_ID, title, dept_name, credits, syllabus) VALUES\n('CS101', 'Intro to Computer Science', 'Computer Science', 4, 'Introduction to fundamentals of computer science'),\n('MATH201', 'Advanced Mathematics', 'Mathematics', 3, 'In-depth study of abstract mathematical theories'),\n('PH101', 'General Physics', 'Physics', 3, 'Concepts of motion and energy'),\n('HIST301', 'World History', 'History', 3, 'Overview of global historical events'),\n('ENG202', 'British Literature', 'English', 2, 'Study of literature from Britain'),\n('BIO101', 'Introductory Biology', 'Biology', 3, 'Basics of biological sciences'),\n('CHEM100', 'Chemistry Principles', 'Chemistry', 3, 'Fundamental principles of chemistry'),\n('ECO200', 'Microeconomics', 'Economics', 3, 'Principles of microeconomic theory'),\n('LAW400', 'Corporate Law', 'Law', 4, 'Understanding corporate law and regulations'),\n('PSY101', 'Intro to Psychology', 'Psychology', 3, 'Basics of psychological theories');\n-- Instructor\nINSERT INTO Instructor (ID, name, dept_name, salary) VALUES\n('I1001', 'Alice Johnson', 'Computer Science', 90000),\n('I1002', 'Bob Smith', 'Mathematics', 85000),\n('I1003', 'Carol White', 'Physics', 80000),\n('I1004', 'Dave Brown', 'History', 78000),\n('I1005', 'Eve Davis', 'English', 75000),\n('I1006', 'Frank Miller', 'Biology', 87000),\n('I1007', 'Grace Wilson', 'Chemistry', 89000),\n('I1008', 'Henry Moore', 'Economics', 92000),\n('I1009', 'Isabel Taylor', 'Law', 95000),\n('I1010', 'Jack Lee', 'Psychology', 77000);\n-- Student\nINSERT INTO Student (ID, name, dept_name, tot_credit, date_of_birth) VALUES\n('S1001', 'John Doe', 'Computer Science', 45, '2000-01-01'),\n('S1002', 'Jane Smith', 'Mathematics', 30, '2000-02-02'),\n('S1003', 'Mike Brown', 'Physics', 60, '2001-03-03'),\n('S1004', 'Lucy Green', 'History', 50, '2001-04-04'),\n('S1005', 'Ethan Hunt', 'English', 40, '2002-05-05'),\n('S1006', 'Emma Wilson', 'Biology', 55, '2002-06-06'),\n('S1007', 'Olivia Jones', 'Chemistry', 65, '2003-07-07'),\n('S1008', 'Noah Lee', 'Economics', 75, '2003-08-08'),\n('S1009', 'Sophia Martinez', 'Law', 85, '2004-09-09'),\n('S1010', 'Liam Taylor', 'Psychology', 95, '2004-10-10');\n-- Section\nINSERT INTO Section (course_ID, sec_id, semester, year, building, room_no, time_slot_id) VALUES\n('CS101', '01', 'Fall', 2023, 'CompSci Building', 101, 'A'),\n('MATH201', '01', 'Spring', 2024, 'Math Building', 202, 'B'),\n('PH101', '02', 'Fall', 2023, 'Physics Building', 301, 'C'),\n('HIST301', '02', 'Spring', 2024, 'History Building', 401, 'D'),\n('ENG202', '01', 'Fall', 2023, 'English Building', 102, 'E'),\n('BIO101', '01', 'Spring', 2024, 'Biology Building', 202, 'F'),\n('CHEM100', '02', 'Fall', 2023, 'Chemistry Building', 301, 'G'),\n('ECO200', '02', 'Spring', 2024, 'Economics Building', 402, 'H'),\n('LAW400', '01', 'Fall', 2023, 'Law Building', 101, 'I'),\n('PSY101', '01', 'Spring', 2024, 'Psychology Building', 202, 'J');\nINSERT INTO Time_Slot (time_slot_ID, day, start_hr, end_hr, start_min, end_min) VALUES\n('A', 'Monday', '09:00', '10:30', '00:00', '30:00'),\n('B', 'Tuesday', '10:00', '11:30', '00:00', '30:00'),\n('C', 'Wednesday', '11:00', '12:30', '00:00', '30:00'),\n('D', 'Thursday', '12:00', '13:30', '00:00', '30:00'),\n('E', 'Friday', '13:00', '14:30', '00:00', '30:00'),\n('F', 'Monday', '14:00', '15:30', '00:00', '30:00'),\n('G', 'Tuesday', '15:00', '16:30', '00:00', '30:00'),\n('H', 'Wednesday', '16:00', '17:30', '00:00', '30:00'),\n('I', 'Thursday', '17:00', '18:30', '00:00', '30:00'),\n('J', 'Friday', '18:00', '19:30', '00:00', '30:00');\nINSERT INTO Classroom (room_no, building, capacity) VALUES\n('101', 'CompSci Building', 30),\n('202', 'Math Building', 20),\n('301', 'Physics Building', 25),\n('401', 'History Building', 15),\n('102', 'English Building', 40),\n('202', 'Biology Building', 35),\n('301', 'Chemistry Building', 50),\n('402', 'Economics Building', 45),\n('101', 'Law Building', 60),\n('202', 'Psychology Building', 25);\nINSERT INTO Advisor (s_ID, I_ID) VALUES\n('S1001', 'I1001'),\n('S1002', 'I1002'),\n('S1003', 'I1003'),\n('S1004', 'I1004'),\n('S1005', 'I1005'),\n('S1006', 'I1006'),\n('S1007', 'I1007'),\n('S1008', 'I1008'),\n('S1009', 'I1009'),\n('S1010', 'I1010');\nINSERT INTO Takes (ID, course_ID, sec_ID, semester, year, grade) VALUES\n('S1001', 'CS101', '01', 'Fall', 2023, 'A'),\n('S1002', 'MATH201', '01', 'Spring', 2024, 'B'),\n('S1003', 'PH101', '02', 'Fall', 2023, 'C'),\n('S1004', 'HIST301', '02', 'Spring', 2024, 'D'),\n('S1005', 'ENG202', '01', 'Fall', 2023, 'B'),\n('S1006', 'BIO101', '01', 'Spring', 2024, 'A'),\n('S1007', 'CHEM100', '02', 'Fall', 2023, 'B'),\n('S1008', 'ECO200', '02', 'Spring', 2024, 'A'),\n('S1009', 'LAW400', '01', 'Fall', 2023, 'C'),\n('S1010', 'PSY101', '01', 'Spring', 2024, 'A');\nINSERT INTO Teaches (ID, course_ID, sec_ID, semester, year) VALUES\n('I1001', 'CS101', '01', 'Fall', 2023),\n('I1002', 'MATH201', '01', 'Spring', 2024),\n('I1003', 'PH101', '02', 'Fall', 2023),\n('I1004', 'HIST301', '02', 'Spring', 2024),\n('I1005', 'ENG202', '01', 'Fall', 2023),\n('I1006', 'BIO101', '01', 'Spring', 2024),\n('I1007', 'CHEM100', '02', 'Fall', 2023),\n('I1008', 'ECO200', '02', 'Spring', 2024),\n('I1009', 'LAW400, '01', 'Fall', 2023),\n('I1010', 'PSY101', '01', 'Spring', 2024);\nINSERT INTO Prerequisite (course_ID, prereq_ID) VALUES\n('CS301', 'CS101'),\n('MATH201', 'MATH101'),\n('PH301', 'PH101'),\n('HIST400', 'HIST200'),\n('ENG300', 'ENG100'),\n('BIO200', 'BIO101'),\n('CHEM300', 'CHEM100'),\n('ECO300', 'ECO100'),\n('LAW500', 'LAW300'),\n('PSY300', 'PSY101');\nINSERT INTO Grading_Components (course_ID, max_points, weights) VALUES\n('CS101', 100, 0.20),\n('MATH201', 100, 0.25),\n('PH101', 100, 0.15),\n('HIST301', 100, 0.10),\n('ENG202', 100, 0.30),\n('BIO101', 100, 0.25),\n('CHEM100', 100, 0.20),\n('ECO200', 100, 0.15),\n('LAW400', 100, 0.30),\n('PSY101', 100, 0.20);\nDROP TABLE Department, Student, Instructor, Course, Department, Section, Time_Slot, Classroom, Advisor, Takes, Teaches, Prerequisite, Grading_Components;\n\n",
+    "options": {
+        "tabSize": 4,
+        "insertSpaces": true,
+        "indentSize": 4,
+        "defaultEOL": "LF",
+        "trimAutoWhitespace": true
+    },
+    "viewState": {
+        "cursorState": [
+            {
+                "inSelectionMode": true,
+                "selectionStart": {
+                    "lineNumber": 117,
+                    "column": 80
+                },
+                "position": {
+                    "lineNumber": 111,
+                    "column": 4
+                }
+            }
+        ],
+        "viewState": {
+            "scrollLeft": 0,
+            "firstPosition": {
+                "lineNumber": 110,
+                "column": 1
+            },
+            "firstPositionDeltaTop": -1
+        },
+        "contributionsState": {
+            "editor.contrib.folding": {},
+            "editor.contrib.wordHighlighter": false
+        }
+    },
+    "contexts": [
+        {
+            "state": {
+                "start": 1,
+                "end": 1,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1007): ClassicSession.run_sql: Can't create database 'myuniversity'; database exists",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 29
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 29,
+                            "length": 0
+                        },
+                        "contentStart": 28,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 2,
+                "end": 2,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "6bc425d9-87a9-4ecf-f653-c3a784171d0b",
+                            "content": "OK, 0 records retrieved in 17.896ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 17
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 3,
+                "end": 110,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'department' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'course' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 2,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'instructor' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 3,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'section' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 4,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'time_slot' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 5,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'classroom' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 6,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'student' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 7,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'advisor' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 8,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'takes' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 9,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'teaches' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 10,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'prerequisite' already exists",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 11,
+                            "content": "MySQL Error (1050): ClassicSession.run_sql: Table 'grading_components' already exists",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 198.0625,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 119
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 119,
+                            "length": 213
+                        },
+                        "contentStart": 121,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 332,
+                            "length": 200
+                        },
+                        "contentStart": 334,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 532,
+                            "length": 309
+                        },
+                        "contentStart": 534,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 841,
+                            "length": 165
+                        },
+                        "contentStart": 843,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1006,
+                            "length": 134
+                        },
+                        "contentStart": 1008,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1140,
+                            "length": 214
+                        },
+                        "contentStart": 1142,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1354,
+                            "length": 191
+                        },
+                        "contentStart": 1356,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1545,
+                            "length": 363
+                        },
+                        "contentStart": 1547,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 1908,
+                            "length": 349
+                        },
+                        "contentStart": 1910,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2257,
+                            "length": 241
+                        },
+                        "contentStart": 2259,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2498,
+                            "length": 198
+                        },
+                        "contentStart": 2500,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 2696,
+                            "length": 2
+                        },
+                        "contentStart": 2695,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 111,
+                "end": 118,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "24eba65d-d1f7-449b-93a1-ac341711d980",
+                            "content": "OK, 0 records retrieved in 59.365ms"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1822): ClassicSession.run_sql: Failed to add the foreign key constraint. Missing index for constraint 'section_ibfk_9' in the referenced table 'Classroom'",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 39.65625,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 197
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 197,
+                            "length": 9
+                        },
+                        "contentStart": 197,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 206,
+                            "length": 194
+                        },
+                        "contentStart": 206,
+                        "state": 3
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 406,
+                            "length": 4
+                        },
+                        "contentStart": 408,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 119,
+                "end": 119,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "7ac2800c-1253-4952-822e-a5f9bfcf9d6d"
+                    ]
+                },
+                "currentHeight": 312.46875,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 12
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "7ac2800c-1253-4952-822e-a5f9bfcf9d6d",
+                    "rows": [
+                        {
+                            "0": "Advisor"
+                        },
+                        {
+                            "0": "Classroom"
+                        },
+                        {
+                            "0": "Course"
+                        },
+                        {
+                            "0": "Department"
+                        },
+                        {
+                            "0": "Grading_Components"
+                        },
+                        {
+                            "0": "Instructor"
+                        },
+                        {
+                            "0": "Prerequisite"
+                        },
+                        {
+                            "0": "Section"
+                        },
+                        {
+                            "0": "Student"
+                        },
+                        {
+                            "0": "Takes"
+                        },
+                        {
+                            "0": "Teaches"
+                        },
+                        {
+                            "0": "Time_Slot"
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Tables_in_myuniversity",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 12 records retrieved in 28.003ms"
+                    },
+                    "totalRowCount": 12,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SHOW TABLES"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 120,
+                "end": 120,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 2 records retrieved in 11.552ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Advisor;\n+-------+-------------+------+-----+---------+-------+\n| Field | Type        | Null | Key | Default | Extra |\n+-------+-------------+------+-----+---------+-------+\n| s_ID  | varchar(10) | NO   | PRI | null    |       |\n| I_ID  | varchar(10) | YES  | MUL | null    |       |\n+-------+-------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 146.84375,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 17
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 17,
+                            "length": 0
+                        },
+                        "contentStart": 16,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 121,
+                "end": 121,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "442911f0-b1e8-4bb8-b35a-b4ae93d2fc2a"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 19
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 19,
+                            "length": 0
+                        },
+                        "contentStart": 18,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "442911f0-b1e8-4bb8-b35a-b4ae93d2fc2a",
+                    "rows": [
+                        {
+                            "0": "room_no",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "building",
+                            "1": "varchar(50)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "capacity",
+                            "1": "int",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Field",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Type",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Null",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Key",
+                            "field": "3",
+                            "dataType": {
+                                "type": 46
+                            }
+                        },
+                        {
+                            "title": "Default",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Extra",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 3 records retrieved in 5.14ms"
+                    },
+                    "totalRowCount": 3,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "DESCRIBE Classroom"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 122,
+                "end": 122,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "62c2e28c-15d8-496b-d6d8-e8fb14d34d2f"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 16
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 16,
+                            "length": 0
+                        },
+                        "contentStart": 15,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "62c2e28c-15d8-496b-d6d8-e8fb14d34d2f",
+                    "rows": [
+                        {
+                            "0": "course_ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "title",
+                            "1": "varchar(100)",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "dept_name",
+                            "1": "varchar(50)",
+                            "2": "YES",
+                            "3": "MUL",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "credits",
+                            "1": "int",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "syllabus",
+                            "1": "text",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Field",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Type",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Null",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Key",
+                            "field": "3",
+                            "dataType": {
+                                "type": 46
+                            }
+                        },
+                        {
+                            "title": "Default",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Extra",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 5 records retrieved in 2.935ms"
+                    },
+                    "totalRowCount": 5,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "DESCRIBE Course"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 123,
+                "end": 123,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 3 records retrieved in 6.683ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Department;\n+-----------+---------------+------+-----+---------+-------+\n| Field     | Type          | Null | Key | Default | Extra |\n+-----------+---------------+------+-----+---------+-------+\n| dept_name | varchar(50)   | NO   | PRI | null    |       |\n| building  | varchar(50)   | YES  |     | null    |       |\n| budget    | decimal(12,2) | YES  |     | null    |       |\n+-----------+---------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 20
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 20,
+                            "length": 0
+                        },
+                        "contentStart": 19,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 124,
+                "end": 124,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 3 records retrieved in 5.092ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Grading_Components;\n+------------+--------------+------+-----+---------+-------+\n| Field      | Type         | Null | Key | Default | Extra |\n+------------+--------------+------+-----+---------+-------+\n| course_ID  | varchar(10)  | NO   | PRI | null    |       |\n| max_points | int          | YES  |     | null    |       |\n| weights    | decimal(5,2) | YES  |     | null    |       |\n+------------+--------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 28
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 28,
+                            "length": 0
+                        },
+                        "contentStart": 27,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 125,
+                "end": 125,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "0af4b8e2-b064-4444-e200-141925b2a53d"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 20
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 20,
+                            "length": 0
+                        },
+                        "contentStart": 19,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "0af4b8e2-b064-4444-e200-141925b2a53d",
+                    "rows": [
+                        {
+                            "0": "ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "name",
+                            "1": "varchar(100)",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "dept_name",
+                            "1": "varchar(50)",
+                            "2": "YES",
+                            "3": "MUL",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "salary",
+                            "1": "decimal(12,2)",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Field",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Type",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Null",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Key",
+                            "field": "3",
+                            "dataType": {
+                                "type": 46
+                            }
+                        },
+                        {
+                            "title": "Default",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Extra",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 4 records retrieved in 5.349ms"
+                    },
+                    "totalRowCount": 4,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "DESCRIBE Instructor"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 126,
+                "end": 126,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "5e5df34a-fc51-4914-db43-f22d4c09f361"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 22
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 22,
+                            "length": 0
+                        },
+                        "contentStart": 21,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "5e5df34a-fc51-4914-db43-f22d4c09f361",
+                    "rows": [
+                        {
+                            "0": "course_ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "prereq_ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Field",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Type",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Null",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Key",
+                            "field": "3",
+                            "dataType": {
+                                "type": 46
+                            }
+                        },
+                        {
+                            "title": "Default",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Extra",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 2 records retrieved in 7.763ms"
+                    },
+                    "totalRowCount": 2,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "DESCRIBE Prerequisite"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 127,
+                "end": 127,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "0dcfa0ca-5003-4081-a1ab-da394950ce7d"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 17
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 17,
+                            "length": 0
+                        },
+                        "contentStart": 16,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "0dcfa0ca-5003-4081-a1ab-da394950ce7d",
+                    "rows": [
+                        {
+                            "0": "sec_ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "course_ID",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "semester",
+                            "1": "varchar(10)",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "year",
+                            "1": "int",
+                            "2": "NO",
+                            "3": "PRI",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "building",
+                            "1": "varchar(50)",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "room_no",
+                            "1": "varchar(10)",
+                            "2": "YES",
+                            "3": "",
+                            "4": null,
+                            "5": ""
+                        },
+                        {
+                            "0": "time_slot_ID",
+                            "1": "varchar(10)",
+                            "2": "YES",
+                            "3": "MUL",
+                            "4": null,
+                            "5": ""
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "Field",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Type",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Null",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Key",
+                            "field": "3",
+                            "dataType": {
+                                "type": 46
+                            }
+                        },
+                        {
+                            "title": "Default",
+                            "field": "4",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "Extra",
+                            "field": "5",
+                            "dataType": {
+                                "type": 17
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 7 records retrieved in 56.965ms"
+                    },
+                    "totalRowCount": 7,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "DESCRIBE Section"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 128,
+                "end": 128,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 5 records retrieved in 3.441ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Student;\n+---------------+--------------+------+-----+---------+-------+\n| Field         | Type         | Null | Key | Default | Extra |\n+---------------+--------------+------+-----+---------+-------+\n| ID            | varchar(10)  | NO   | PRI | null    |       |\n| name          | varchar(100) | YES  |     | null    |       |\n| dept_name     | varchar(50)  | YES  | MUL | null    |       |\n| tot_credit    | int          | YES  |     | null    |       |\n| date_of_birth | date         | YES  |     | null    |       |\n+---------------+--------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 17
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 17,
+                            "length": 0
+                        },
+                        "contentStart": 16,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 129,
+                "end": 129,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 6 records retrieved in 10.488ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Takes;\n+-----------+-------------+------+-----+---------+-------+\n| Field     | Type        | Null | Key | Default | Extra |\n+-----------+-------------+------+-----+---------+-------+\n| ID        | varchar(10) | NO   | PRI | null    |       |\n| course_ID | varchar(10) | NO   | PRI | null    |       |\n| sec_ID    | varchar(10) | NO   | PRI | null    |       |\n| semester  | varchar(10) | NO   | PRI | null    |       |\n| year      | int         | NO   | PRI | null    |       |\n| grade     | char(2)     | YES  |     | null    |       |\n+-----------+-------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 15
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 15,
+                            "length": 0
+                        },
+                        "contentStart": 14,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 130,
+                "end": 130,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 5 records retrieved in 4.687ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Teaches;\n+-----------+-------------+------+-----+---------+-------+\n| Field     | Type        | Null | Key | Default | Extra |\n+-----------+-------------+------+-----+---------+-------+\n| ID        | varchar(10) | NO   | PRI | null    |       |\n| course_ID | varchar(10) | NO   | PRI | null    |       |\n| sec_ID    | varchar(10) | NO   | PRI | null    |       |\n| semester  | varchar(10) | NO   | PRI | null    |       |\n| year      | int         | NO   | PRI | null    |       |\n+-----------+-------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 17
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 17,
+                            "length": 0
+                        },
+                        "contentStart": 16,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 131,
+                "end": 131,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 6 records retrieved in 3.897ms"
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "sql> DESCRIBE Time_Slot;\n+--------------+-------------+------+-----+---------+-------+\n| Field        | Type        | Null | Key | Default | Extra |\n+--------------+-------------+------+-----+---------+-------+\n| time_slot_ID | varchar(10) | NO   | PRI | null    |       |\n| day          | varchar(10) | YES  |     | null    |       |\n| start_hr     | time        | YES  |     | null    |       |\n| end_hr       | time        | YES  |     | null    |       |\n| start_min    | time        | YES  |     | null    |       |\n| end_min      | time        | YES  |     | null    |       |\n+--------------+-------------+------+-----+---------+-------+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 19
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 132,
+                "end": 143,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 10 rows affected in 103.548ms",
+                        "type": 4
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 499
+                        },
+                        "contentStart": 14,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 144,
+                "end": 155,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "f0419297-b752-4686-8ea9-db344d57db92",
+                            "content": "OK, 10 rows affected in 99.086ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 984
+                        },
+                        "contentStart": 10,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 156,
+                "end": 167,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "executionInfo": {
+                        "text": "OK, 10 rows affected in 32.382ms",
+                        "type": 4
+                    },
+                    "text": [
+                        {
+                            "type": 3,
+                            "content": "+\n"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 527
+                        },
+                        "contentStart": 14,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 168,
+                "end": 179,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "d92980eb-404c-455f-831c-a35280ded7e7",
+                            "content": "OK, 10 rows affected in 26.321ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 647
+                        },
+                        "contentStart": 11,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 180,
+                "end": 191,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1452): ClassicSession.run_sql: Cannot add or update a child row: a foreign key constraint fails (`myuniversity`.`section`, CONSTRAINT `section_ibfk_2` FOREIGN KEY (`time_slot_ID`) REFERENCES `time_slot` (`time_slot_ID`))",
+                            "language": "ansi"
+                        },
+                        {
+                            "type": 0,
+                            "index": 1,
+                            "content": "MySQL Error (1065): ClassicSession.run_sql: Query was empty",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 737
+                        },
+                        "contentStart": 11,
+                        "state": 0
+                    },
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 737,
+                            "length": 0
+                        },
+                        "contentStart": 737,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 192,
+                "end": 202,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "c4ff8a24-a64f-43d8-85e7-1fb615302d0c",
+                            "content": "OK, 10 rows affected in 4.894ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 628
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 203,
+                "end": 213,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1062): ClassicSession.run_sql: Duplicate entry '101-CompSci Building' for key 'classroom.PRIMARY'",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 388
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 214,
+                "end": 224,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 4,
+                            "index": 0,
+                            "resultId": "556c9392-453f-4e7f-b1b9-9906082d65ca",
+                            "content": "OK, 10 rows affected in 27.877ms"
+                        }
+                    ]
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 239
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 225,
+                "end": 235,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1452): ClassicSession.run_sql: Cannot add or update a child row: a foreign key constraint fails (`myuniversity`.`takes`, CONSTRAINT `takes_ibfk_2` FOREIGN KEY (`course_ID`, `sec_ID`, `semester`, `year`) REFERENCES `section` (`course_ID`, `sec_ID`, `semester`, `year`))",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 542
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 236,
+                "end": 246,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1064): ClassicSession.run_sql: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '01', 'Fall', 2023),\n('I1010', 'PSY101', '01', 'Spring', 2024)' at line 10",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 486
+                        },
+                        "contentStart": 0,
+                        "state": 2
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 247,
+                "end": 257,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1452): ClassicSession.run_sql: Cannot add or update a child row: a foreign key constraint fails (`myuniversity`.`prerequisite`, CONSTRAINT `prerequisite_ibfk_1` FOREIGN KEY (`course_ID`) REFERENCES `course` (`course_ID`))",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 276
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 258,
+                "end": 268,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1062): ClassicSession.run_sql: Duplicate entry 'CS101' for key 'grading_components.PRIMARY'",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 301
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 269,
+                "end": 269,
+                "language": "mysql",
+                "result": {
+                    "type": "text",
+                    "text": [
+                        {
+                            "type": 0,
+                            "index": 0,
+                            "content": "MySQL Error (1066): ClassicSession.run_sql: Not unique table/alias: 'Department'",
+                            "language": "ansi"
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": ""
+                    }
+                },
+                "currentHeight": 28,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 153
+                        },
+                        "contentStart": 1,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        },
+        {
+            "state": {
+                "start": 270,
+                "end": 270,
+                "language": "mysql",
+                "result": {
+                    "type": "resultIds",
+                    "list": [
+                        "2ae9d6c7-fb12-48ce-f1a1-fb7ef69baa3b"
+                    ]
+                },
+                "currentHeight": 36,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 3
+                    }
+                ]
+            },
+            "data": [
+                {
+                    "tabId": "a3a895ac-f9ac-48cc-bca1-f797b9e0f0b7",
+                    "resultId": "2ae9d6c7-fb12-48ce-f1a1-fb7ef69baa3b",
+                    "rows": [
+                        {
+                            "0": "S1001",
+                            "1": "John Doe",
+                            "2": "Computer Science",
+                            "3": 45,
+                            "4": "2000-01-01"
+                        },
+                        {
+                            "0": "S1002",
+                            "1": "Jane Smith",
+                            "2": "Mathematics",
+                            "3": 30,
+                            "4": "2000-02-02"
+                        },
+                        {
+                            "0": "S1003",
+                            "1": "Mike Brown",
+                            "2": "Physics",
+                            "3": 60,
+                            "4": "2001-03-03"
+                        },
+                        {
+                            "0": "S1004",
+                            "1": "Lucy Green",
+                            "2": "History",
+                            "3": 50,
+                            "4": "2001-04-04"
+                        },
+                        {
+                            "0": "S1005",
+                            "1": "Ethan Hunt",
+                            "2": "English",
+                            "3": 40,
+                            "4": "2002-05-05"
+                        },
+                        {
+                            "0": "S1006",
+                            "1": "Emma Wilson",
+                            "2": "Biology",
+                            "3": 55,
+                            "4": "2002-06-06"
+                        },
+                        {
+                            "0": "S1007",
+                            "1": "Olivia Jones",
+                            "2": "Chemistry",
+                            "3": 65,
+                            "4": "2003-07-07"
+                        },
+                        {
+                            "0": "S1008",
+                            "1": "Noah Lee",
+                            "2": "Economics",
+                            "3": 75,
+                            "4": "2003-08-08"
+                        },
+                        {
+                            "0": "S1009",
+                            "1": "Sophia Martinez",
+                            "2": "Law",
+                            "3": 85,
+                            "4": "2004-09-09"
+                        },
+                        {
+                            "0": "S1010",
+                            "1": "Liam Taylor",
+                            "2": "Psychology",
+                            "3": 95,
+                            "4": "2004-10-10"
+                        }
+                    ],
+                    "columns": [
+                        {
+                            "title": "ID",
+                            "field": "0",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "name",
+                            "field": "1",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "dept_name",
+                            "field": "2",
+                            "dataType": {
+                                "type": 17
+                            }
+                        },
+                        {
+                            "title": "tot_credit",
+                            "field": "3",
+                            "dataType": {
+                                "type": 4
+                            }
+                        },
+                        {
+                            "title": "date_of_birth",
+                            "field": "4",
+                            "dataType": {
+                                "type": 28
+                            }
+                        }
+                    ],
+                    "executionInfo": {
+                        "text": "OK, 10 records retrieved in 1.874ms"
+                    },
+                    "totalRowCount": 10,
+                    "hasMoreRows": false,
+                    "currentPage": 0,
+                    "index": 0,
+                    "sql": "SELECT * FROM Student"
+                }
+            ]
+        },
+        {
+            "state": {
+                "start": 271,
+                "end": 271,
+                "language": "mysql",
+                "currentHeight": 180,
+                "statements": [
+                    {
+                        "delimiter": ";",
+                        "span": {
+                            "start": 0,
+                            "length": 0
+                        },
+                        "contentStart": 0,
+                        "state": 0
+                    }
+                ]
+            },
+            "data": []
+        }
+    ]
+}

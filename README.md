@@ -26,6 +26,7 @@ The EER diagram for the UAMS outlines the following key entities and their relat
     9. **Advisor**: Represents faculty advisors for students.
     10. **Takes**: Represents student enrollment in sections.
     11. **Teaches**: Represents instructor assignments to sections.
+    12. **Grading Components**: Represents grading components for courses.
 
 
 
@@ -182,15 +183,12 @@ The EER diagram for the UAMS outlines the following key entities and their relat
 - **Prereq to Course**: Many-to-One (A course can have many prerequisites, but each prerequisite relation points to one specific course).
 - **Grading Components**: Many-to-One (A course can have multiple grading components, but each component is associated with one course).
 
-## 📝 Changelog
-- [2024.04.21]: Project started.
-- [2024.04.25]: Added EER.
-- [2024.04.27]: Added MySQL.
+
 
 
 ---
 
-# Installation in MySQL shell
+## Installation in MySQL shell
 
 Login to MySQL:
 ```mysql
@@ -251,7 +249,7 @@ DESCRIBE Section;
 
 ---
 
-# Installation in Jupiter Notebook
+## Installation in Jupiter Notebook
 
 
 ### 1. Using IPython SQL Magic
@@ -315,7 +313,14 @@ If you prefer to work with data frames and need more control over the data manip
    print(df)
    ```
 
+---
 
+
+## 📝 Changelog
+- [2024.04.21]: Project started.
+- [2024.04.25]: Added EER.
+- [2024.04.27]: Added MySQL.
+- 
 ---
 
 ## 📢 Disclaimer
