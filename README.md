@@ -28,85 +28,8 @@ The EER diagram for the UAMS outlines the following key entities and their relat
     11. **Teaches**: Represents instructor assignments to sections.
     12. **Grading Components**: Represents grading components for courses.
 
-
-
-### Expanded EER Diagram (Textual Representation)
-
-```md
-+------------------+      +-------------+        +-------------+
-|     Student      |      |   Advisor   |        | Instructor  |
-+------------------+      +-------------+        +-------------+
-| - ID (PK)        |<-----|- s_ID (FK)  |        |- ID (PK)    |---+
-| - name           |      |- i_ID (FK)  |------->|- name       |   |
-| - dept_name (FK) |----->|             |        |- dept_name (FK)-+-->+----------------+
-| - tot_cred       |      +-------------+        |- salary     |       |  Department    |
-| - date_of_birth  |                             +-------------+       +----------------+
-| - address        |                                                   | - dept_name (PK)|
-+------------------+                                                   | - building      |
-        ^                                                              | - budget        |
-        |                                                              +----------------+
-        |                                                                           ^
-        |                                                                           |
-        |                                                                           |
-        |        +--------------+         +-----------------+                       |
-        |        |    Takes     |         |     Teaches     |                       |
-        |        +--------------+         +-----------------+                       |
-        +------->| - ID (FK)    |         | - ID (FK)       |                       |
-                 | - course_id (FK)       | - course_id (FK)|                       |
-                 | - sec_id (FK)|         | - sec_id (FK)   |                       |
-                 | - semester   |         | - semester      |                       |
-                 | - year       |         | - year          |                       |
-                 | - grade      |         |                 |                       |
-                 +--------------+         +-----------------+                       |
-                           ^                                                        |
-                           |                                                        |
-                           |                                                        |
-                           |                                                        |
-                           |            +--------------+     +-------------+        |
-                           |            |    Section    |     |   Course   |        |
-                           +----------->| - course_id (FK)-+--|- course_id(PK)      |
-                                        | - sec_id (PK) |     | - title    |        |
-                                        | - semester    |     | - dept_name(FK)     |
-                                        | - year        |     | - credits  |        |
-                                        | - building    |     | - syllabus |        |
-                                        | - room_no     |     +-------------+       |
-                                        | - time_slot_id (FK)-+                     |
-                                        +--------------+                            |
-                                             |                                      |
-                                             |                                      |
-                               +----------------+              +------------+       |
-                               |   Classroom    |              | Time Slot  |       |
-                               +----------------+              +------------+       |
-                               | - building (PK)|              | - time_slot_id (PK)|
-                               | - room_no (PK) |              | - day      |       |
-                               | - capacity     |              | - start_hr |       |
-                               +----------------+              | - start_min|       |
-                                                               | - end_hr   |       |
-                                                               | - end_min  |       |<---+
-                                                               +------------+            |
-                                                                               +-------------+
-                                                                               |   Prereq    |
-                                                                               +-------------+
-                                                                               | - course_id (FK)
-                                                                               | - prereq_id (FK)
-                                                                               +-------------+
-                                                                                      |
-                                                                                      |
-                                                                                      |
-                                                                                      |
-                                                                                      | 
-                                                                                      |
-                                                                                      |
-                                              +------------------------+               |
-                                              |  Grading_Components    |<--------------+
-                                              +------------------------+
-                                              | - course_ID (PK)       |
-                                              | - max_points           |
-                                              | - weights              |
-                                              +------------------------+
-```
-                                                                    
- 
+                                 
+ <center><img src = 'img/EER_drawio.png'></center>
 
 ### Enhanced Details and Cardinalities
 
@@ -188,16 +111,23 @@ The EER diagram for the UAMS outlines the following key entities and their relat
 
 ---
 
-## Installation in MySQL shell
+## Implementatin via MySQL shell
 
-Login to MySQL:
+1. Login to MySQL:
 ```mysql
 mysql -u root -p
 ```
 
+2. Create a new database:
 ```mysql
 CREATE DATABASE myuniversity;
 USE myuniversity;
+```
+3. Create tables in the database:
+
+```mysql
+CREATE TABLE Department (
+   ...
 ```
 
 Describe the structure of the Students table:
@@ -247,71 +177,125 @@ DESCRIBE Section;
   +--------------+-------------+------+-----+---------+-------+
   ```
 
----
+## Implementatin via Jupiter Notebook for better visualization
 
-## Installation in Jupiter Notebook
+### Using IPython SQL Magicm extension allows us to write SQL queries in Jupyter Notebook cells. 
+
+4. Insert data into the tables:
+
+```mysql
+INSERT INTO Department VALUES ('Biology', 'Life Sciences', 100000);
+   ...
+```
 
 
-### 1. Using IPython SQL Magic
-
-The IPython SQL magic extension allows you to write SQL queries in Jupyter Notebook cells. 
-
-1. **Install the necessary packages**: You need to install `ipython-sql`, which is a Jupyter Notebook extension for running SQL queries. You also need a database connection library for the type of database you're using (e.g., `sqlite3` for SQLite, `pymysql` for MySQL, etc.). You can install these using pip:
+**Install the necessary packages**: You need to install `ipython-sql`, which is a Jupyter Notebook extension for running SQL queries. You also need a database connection library for the type of database you're using (e.g., `sqlite3` for SQLite, `pymysql` for MySQL, etc.). You can install these using pip:
 
    ```bash
    pip install ipython-sql sqlalchemy pymysql
    ```
 
-2. **Load the SQL extension in your Jupyter Notebook**: You can load the SQL extension by using the `%load_ext` magic command.
+**Load the SQL extension in your Jupyter Notebook**: You can load the SQL extension by using the `%load_ext` magic command.
 
    ```python
    %load_ext sql
    ```
 
-3. **Connect to your database**: You need to connect to your database using the `%sql` magic command and the appropriate connection string.
+**Connect to your database**: You need to connect to your database using the `%sql` magic command and the appropriate connection string.
 
    ```python
-   %sql sqlite:///your_database_file.db
+   %sql sqlite:///your_database_file.db # database_filename
    ```
 
    This example uses SQLite, but you can adjust the connection string for other databases like PostgreSQL, MySQL, etc.
 
-4. **Run SQL queries**: Once connected, you can run SQL queries by prefixing them with the `%sql` magic for single line queries or `%%sql` magic for multi-line queries.
+**Run SQL queries**: Once connected, you can run SQL queries by prefixing them with the `%sql` magic for single line queries or `%%sql` magic for multi-line queries.
 
    ```python
    %%sql
    SELECT * FROM your_table;
    ```
 
-### 2. Using Pandas with SQLAlchemy
 
-If you prefer to work with data frames and need more control over the data manipulation, you can use Pandas in combination with SQLAlchemy:
+## Expanded EER Diagram (Textual Representation) via MySQL Workbench
 
-1. **Install Pandas and SQLAlchemy**:
+ <center><img src = 'img/EER_mysqlbench.png'></center>
 
-   ```bash
-   pip install pandas sqlalchemy
-   ```
 
-2. **Set up an engine connection**:
-
-   ```python
-   from sqlalchemy import create_engine
-   import pandas as pd
-
-   # For SQLite
-   engine = create_engine('sqlite:///your_database_file.db')
-
-   # For other databases adjust the URL accordingly
-   ```
-
-3. **Query using Pandas**:
-
-   ```python
-   query = "SELECT * FROM your_table"
-   df = pd.read_sql_query(query, engine)
-   print(df)
-   ```
+```md
++------------------+      +-------------+        +-------------+
+|     Student      |      |   Advisor   |        | Instructor  |
++------------------+      +-------------+        +-------------+
+| - ID (PK)        |<-----|- s_ID (FK)  |        |- ID (PK)    |---+
+| - name           |      |- i_ID (FK)  |------->|- name       |   |
+| - dept_name (FK) |----->|             |        |- dept_name (FK)-+-->+----------------+
+| - tot_cred       |      +-------------+        |- salary     |       |  Department    |
+| - date_of_birth  |                             +-------------+       +----------------+
+| - address        |                                                   | - dept_name (PK)|
++------------------+                                                   | - building      |
+        ^                                                              | - budget        |
+        |                                                              +----------------+
+        |                                                                           ^
+        |                                                                           |
+        |                                                                           |
+        |        +--------------+         +-----------------+                       |
+        |        |    Takes     |         |     Teaches     |                       |
+        |        +--------------+         +-----------------+                       |
+        +------->| - ID (FK)    |         | - ID (FK)       |                       |
+                 | - course_id (FK)       | - course_id (FK)|                       |
+                 | - sec_id (FK)|         | - sec_id (FK)   |                       |
+                 | - semester   |         | - semester      |                       |
+                 | - year       |         | - year          |                       |
+                 | - grade      |         |                 |                       |
+                 +--------------+         +-----------------+                       |
+                           ^                                                        |
+                           |                                                        |
+                           |                                                        |
+                           |                                                        |
+                           |            +--------------+     +-------------+        |
+                           |            |    Section    |     |   Course   |        |
+                           +----------->| - course_id (FK)-+--|- course_id(PK)      |
+                                        | - sec_id (PK) |     | - title    |        |
+                                        | - semester    |     | - dept_name(FK)     |
+                                        | - year        |     | - credits  |        |
+                                        | - building    |     | - syllabus |        |
+                                        | - room_no     |     +-------------+       |
+                                        | - time_slot_id (FK)-+                     |
+                                        +--------------+                            |
+                                             |                                      |
+                                             |                                      |
+                               +----------------+              +------------+       |
+                               |   Classroom    |              | Time Slot  |       |
+                               +----------------+              +------------+       |
+                               | - building (PK)|              | - time_slot_id (PK)|
+                               | - room_no (PK) |              | - day      |       |
+                               | - capacity     |              | - start_hr |       |
+                               +----------------+              | - start_min|       |
+                                                               | - end_hr   |       |
+                                                               | - end_min  |       |<---+
+                                                               +------------+            |
+                                                                               +-------------+
+                                                                               |   Prereq    |
+                                                                               +-------------+
+                                                                               | - course_id (FK)
+                                                                               | - prereq_id (FK)
+                                                                               +-------------+
+                                                                                      |
+                                                                                      |
+                                                                                      |
+                                                                                      |
+                                                                                      | 
+                                                                                      |
+                                                                                      |
+                                              +------------------------+               |
+                                              |  Grading_Components    |<--------------+
+                                              +------------------------+
+                                              | - course_ID (PK)       |
+                                              | - max_points           |
+                                              | - weights              |
+                                              +------------------------+
+```
+                                   
 
 ---
 

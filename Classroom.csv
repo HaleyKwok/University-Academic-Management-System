@@ -1,0 +1,11 @@
+room_no,building,capacity
+101,CompSci Building,30
+101,Law Building,60
+102,English Building,40
+202,Biology Building,35
+202,Math Building,20
+202,Psychology Building,25
+301,Chemistry Building,50
+301,Physics Building,25
+401,History Building,15
+402,Economics Building,45

@@ -1,0 +1,11 @@
+ID,name,dept_name,tot_credit,date_of_birth
+S1001,John Doe,Computer Science,45,2000-01-01
+S1002,Jane Smith,Mathematics,30,2000-02-02
+S1003,Mike Brown,Physics,60,2001-03-03
+S1004,Lucy Green,History,50,2001-04-04
+S1005,Ethan Hunt,English,40,2002-05-05
+S1006,Emma Wilson,Biology,55,2002-06-06
+S1007,Olivia Jones,Chemistry,65,2003-07-07
+S1008,Noah Lee,Economics,75,2003-08-08
+S1009,Sophia Martinez,Law,85,2004-09-09
+S1010,Liam Taylor,Psychology,95,2004-10-10

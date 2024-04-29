@@ -1,0 +1,11 @@
+sec_ID,course_ID,semester,year,building,room_no,time_slot_ID
+01,BIO101,Spring,2024,Biology Building,202,F
+01,CS101,Fall,2023,CompSci Building,101,A
+01,ENG202,Fall,2023,English Building,102,E
+01,LAW400,Fall,2023,Law Building,101,I
+01,MATH201,Spring,2024,Math Building,202,B
+01,PSY101,Spring,2024,Psychology Building,202,J
+02,CHEM100,Fall,2023,Chemistry Building,301,G
+02,ECO200,Spring,2024,Economics Building,402,H
+02,HIST301,Spring,2024,History Building,401,D
+02,PH101,Fall,2023,Physics Building,301,C
