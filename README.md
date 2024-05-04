@@ -315,7 +315,7 @@ INSERT INTO Department VALUES ('Biology', 'Life Sciences', 100000);
 - [2024.04.21]: Project started.
 - [2024.04.25]: Added EER.
 - [2024.04.27]: Added MySQL.
-- 
+- [2024.05.04]: Added Jupyter Notebook for visualization.
 ---
 
 ## 📢 Disclaimer
