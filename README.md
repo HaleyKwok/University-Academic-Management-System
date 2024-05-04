@@ -296,6 +296,17 @@ INSERT INTO Department VALUES ('Biology', 'Life Sciences', 100000);
                                               +------------------------+
 ```
                                    
+## Normalization Analysis
+
+
+
+| Normal Form| Definition  | Reasons    |
+|--|--|--|
+| **First Normal Form (1NF)** | 1. Atomic (indivisible) values: No multi-valued attributes or repeating groups.<br> 2. Entries in a column are of the same data type.   | **Achieved:**<br> 1. Each column holds atomic values.<br> 2. Each column in a table is declared with a specific data type, and all values in a column are of that type.                                                                                    |
+| **Second Normal Form (2NF)** | 1. It is in 1NF.<br> 2. All non-key attributes are fully functionally dependent on the primary key.    | **Achieved:**<br> 1. Single-column primary keys (like in `Department`, `Course`, `Instructor`, etc.) have all non-key attributes depending on the primary key.<br> 2. Composite primary keys (such as in `Section`, `Takes`, `Teaches`, `Prerequisite`) have all non-key attributes dependent on the entire composite key, not just a part of it.    |
+| **Third Normal Form (3NF)** | 1. It is in 2NF.<br> 2. There are no transitive dependencies between non-key attributes.   | **Achieved:**<br> 1. No transitive dependencies are present. Non-key attributes depend solely on the primary key and not on other non-key attributes.<br> 2. In the `Instructor` and `Course` tables, foreign keys like `dept_name` do not lead to any non-key attribute depending upon them, other than through their relationship to the primary key.       |
+| **Boyce-Codd Normal Form (BCNF)** | 1. It is in 3NF.<br> 2. For every one of its non-trivial dependencies (X → Y), X is a superkey. | **Potentially Achieved:**<br> 1. The table structure suggests that each table’s primary key is a candidate key, and all non-trivial dependencies are on these candidate keys.    |
+
 
 ---
 
@@ -313,4 +324,5 @@ This repository is for personal/research/non-commercial use only.
 ---
 
 Copyright © University of California, Berkeley, Faculty of Engineering, Department of Industrial Engineering and Operation Research, [Hin Chi Kwok](https://github.com/HaleyKwok), [Gilberto Yarritu](https://github.com/GilbertoYTec), [Zixuan Huangfu](https://github.com/fionahuangfu), [Yi Fang](https://github.com/floydfang2000)  and [Yu-Heng Chi](https://github.com/albert0512). All rights reserved.
+
 
