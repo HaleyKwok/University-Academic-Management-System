@@ -308,7 +308,7 @@ INSERT INTO Department VALUES ('Biology', 'Life Sciences', 100000);
 ---
 
 ## 📢 Disclaimer
-We have developed this repository to be used for project purposes and therefore it should only be used for personal/research/non-commercial purposes.
+This repository is for personal/research/non-commercial use only.
 
 ---
 
